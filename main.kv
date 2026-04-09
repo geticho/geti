@@ -1,0 +1,128 @@
+MainScreen>:
+    MDScreen:
+        name: "setup"
+        MDBoxLayout:
+            orientation: 'vertical'
+            MDTopAppBar:
+                title: "Morning Setup"
+                elevation: 4
+                right_action_items: [["calendar-check", lambda x: app.switch_screen("daily_view")]]
+            
+            MDScrollView:
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    adaptive_height: True
+                    padding: dp(20)
+                    spacing: dp(20)
+                    
+                    MDTextField:
+                        id: task_name
+                        hint_text: "Task Name (e.g., Work, Study, Gym)"
+                        mode: "rectangle"
+                    
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        spacing: dp(10)
+                        size_hint_y: None
+                        height: dp(50)
+                        
+                        MDRaisedButton:
+                            text: "Set Start Time"
+                            on_release: app.show_time_picker("start")
+                        
+                        MDLabel:
+                            id: start_time_label
+                            text: "08:00"
+                            halign: "center"
+                            theme_text_color: "Secondary"
+                    
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        spacing: dp(10)
+                        size_hint_y: None
+                        height: dp(50)
+                        
+                        MDRaisedButton:
+                            text: "Set End Time"
+                            on_release: app.show_time_picker("end")
+                        
+                        MDLabel:
+                            id: end_time_label
+                            text: "09:00"
+                            halign: "center"
+                            theme_text_color: "Secondary"
+                    
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        spacing: dp(10)
+                        adaptive_size: True
+                        pos_hint: {"center_x": .5}
+                        
+                        MDFillRoundFlatButton:
+                            text: "Add Task"
+                            on_release: app.add_task_to_db()
+                        
+                        MDRectangleFlatButton:
+                            text: "Add Wellness Blocks"
+                            on_release: app.generate_wellness()
+                    
+                    MDSeparator:
+                    
+                    MDLabel:
+                        text: "Current Tasks"
+                        font_style: "H6"
+                    
+                    MDList:
+                        id: task_list
+
+    MDScreen:
+        name: "daily_view"
+        MDBoxLayout:
+            orientation: 'vertical'
+            MDTopAppBar:
+                title: "Daily Routine"
+                elevation: 4
+                left_action_items: [["arrow-left", lambda x: app.switch_screen("setup")]]
+                right_action_items: [["play-circle", lambda x: app.switch_screen("monitor")]]
+            
+            MDScrollView:
+                MDList:
+                    id: daily_task_list
+
+    MDScreen:
+        name: "monitor"
+        MDBoxLayout:
+            orientation: 'vertical'
+            MDTopAppBar:
+                title: "Active Monitoring"
+                elevation: 4
+                left_action_items: [["arrow-left", lambda x: app.switch_screen("daily_view")]]
+            
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(40)
+                spacing: dp(40)
+                
+                MDLabel:
+                    id: current_task_name
+                    text: "No Active Task"
+                    font_style: "H4"
+                    halign: "center"
+                
+                MDProgressBar:
+                    id: task_progress
+                    value: 0
+                    max: 100
+                
+                MDLabel:
+                    id: time_remaining
+                    text: "00:00 remaining"
+                    halign: "center"
+                    theme_text_color: "Hint"
+                
+                MDFillRoundFlatButton:
+                    id: dismiss_btn
+                    text: "Dismiss Alert"
+                    pos_hint: {"center_x": .5}
+                    disabled: True
+                    on_release: app.dismiss_alert()
